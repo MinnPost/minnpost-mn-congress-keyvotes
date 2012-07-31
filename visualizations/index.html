@@ -62,3 +62,113 @@
         color: #414141;
         margin-top: 1em;
       }
+    </style>
+    
+    <div id="minnpost-mn-congress-keyvotes-application">
+      <div id="candidate-graph-canvas"></div>
+      
+      <p class="footnote"></p>
+    </div>
+    
+    <!-- Templates to be used in client side processing. -->
+    <script id="template-geosearch" type="text/template">
+    </script>
+  
+    <!-- jQuery if it is not there and jQueryCustom for Backbone --><!-- jQuery -->
+    <script type="text/javascript">
+      window.jQuery || document.write('<script type="text/javascript" src="https://s3.amazonaws.com/data.minnpost/js/jquery-1.7.2/jquery-1.7.2.min.js"><\/script>')
+    </script>
+    <script type="text/javascript" src="https://s3.amazonaws.com/data.minnpost/js/underscore-1.3.3/underscore-min.js"></script>
+    <script type="text/javascript" src="https://s3.amazonaws.com/data.minnpost/js/raphael-2.1.0/raphael-min.js"></script>
+    
+    <script type="text/javascript">
+      
+      (function($, window, undefined) {
+        $(document).ready(function() {
+          // Application container
+          var KeyvotesApp = (function() {
+            function KeyvotesApp() {
+              this.appName = 'mn-congress-keyvotes';
+              this.data =  {};
+              this.dir = './data/';
+              this.partyColors = {
+                'D': '#1522AC',
+                'R': '#E42535'
+              };
+            }
+            
+            KeyvotesApp.prototype.launch = function() {
+              // Do some binding
+              _.bindAll(this);
+            
+              this.drawGraph();
+            };
+            
+            KeyvotesApp.prototype.drawGraph = function() {
+              var width = $('#minnpost-mn-congress-keyvotes-application').width();
+              var height = 400;
+              var i;
+              var count = 0;
+              var circle;
+              
+              this.graphPaper = Raphael('candidate-graph-canvas', width, height);
+
+              for (i in this.candidates) {
+                count ++;
+                circle = this.graphPaper.circle(100 + (120 * count), 100, 50)
+                  .attr('fill', 'url(images/' + this.candidates[i].image + ')')
+                  .attr('fill-opacity', 0.9)
+                  .attr('stroke', this.partyColors[this.candidates[i].party])
+                  .attr('stroke-width', 5)
+                  .hover(
+                    function(e) {
+                      this.attr('fill-opacity', 1)
+                        .attr('stroke-width', 8);
+                    },
+                    function(e) {
+                      this.attr('fill-opacity', 0.9)
+                        .attr('stroke-width', 5);
+                    }
+                  );
+              }
+            };
+            
+            KeyvotesApp.prototype.dataDir = function() {
+              if (location.host.indexOf('localhost') === -1) {
+                this.dir = 'https://s3.amazonaws.com/data.minnpost/' +
+                  'projects/minnpost-' + this.appName + '/data/';
+              }
+              
+              return this.dir;
+            };
+            
+            return KeyvotesApp;
+          })();
+          
+          // Make app instance
+          keyvotesApp = new KeyvotesApp();
+          keyvotesApp.candidates = {
+            'bachmann': {
+              'name': 'Michelle Bachmann',
+              'image': '192px-Bachmann2011.jpg',
+              'party': 'R',
+              'type': 'representative'
+            },
+            'franken': {
+              'name': 'Al Franken',
+              'image': '189px-Al_Franken_Official_Senate_Portrait.jpg',
+              'party': 'D',
+              'type': 'senator'
+            }
+          };
+          keyvotesApp.launch();
+        });
+      })(jQuery, window);
+      
+    </script>
+  </div>
+  <!-- END: Embeddable -->
+
+</div>
+</body>
+</html>
