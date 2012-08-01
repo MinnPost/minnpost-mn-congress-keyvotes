@@ -235,7 +235,8 @@
             function KeyvotesApp() {
               this.appName = 'mn-congress-keyvotes';
               this.data =  {};
-              this.dir = './data/';
+              this.dataDir = './data/';
+              this.imageDir = './images/';
               this.partyColors = {
                 'D': '#1522AC',
                 'R': '#E42535'
@@ -246,6 +247,7 @@
               // Do some binding
               _.bindAll(this);
             
+              this.processHost();
               this.drawGraph();
             };
             
@@ -320,7 +322,7 @@
                 
                 this.graphPaper.objs.reps[count] = this.graphPaper.circle(x, y, radius)
                   .attr({
-                    'fill': 'url(images/' + val.image + ')',
+                    'fill': 'url(' + this.imageDir + val.image + ')',
                     'stroke': color,
                     'stroke-width': 4,
                     'cursor': 'default'
@@ -355,42 +357,44 @@
                 })).fadeIn();
                 
                 // Make graphics, image
-                this.imgPaper = Raphael('rep-image', 100, 100);
-                this.imgPaper.objs = {};
-                this.imgPaper.objs.image = this.imgPaper.circle(50, 50, 47)
+                thisApp.imgPaper = Raphael('rep-image', 100, 100);
+                thisApp.imgPaper.objs = {};
+                thisApp.imgPaper.objs.image = thisApp.imgPaper.circle(50, 50, 47)
                   .attr({
-                    'fill': 'url(images/' + repData.image + ')',
+                    'fill': 'url(' + thisApp.imageDir + repData.image_large + ')',
                     'stroke': thisApp.partyColors[repData.party],
                     'stroke-width': 4
                   })
                   
                 // Make each graph for each bill
-                this.votePapers = {};
-                this.votePapers['1'] = {};
+                thisApp.votePapers = {};
+                thisApp.votePapers['1'] = {};
                 var voteYesDPer = 55 / (55 + 30);
                 var voteYesRPer = 30 / (55 + 30);
                 
-                this.votePapers['1'].yes = Raphael('bill-yes-1', 150, 15);
-                this.votePapers['1'].yes.rect(0, 0, voteYesDPer * 150, 15)
+                thisApp.votePapers['1'].yes = Raphael('bill-yes-1', 150, 15);
+                thisApp.votePapers['1'].yes.rect(0, 0, voteYesDPer * 150, 15)
                   .attr('fill', thisApp.partyColors['D']).attr('stroke-width', 0);
-                this.votePapers['1'].yes.rect(voteYesDPer * 150, 0, voteYesRPer * 150, 15)
+                thisApp.votePapers['1'].yes.rect(voteYesDPer * 150, 0, voteYesRPer * 150, 15)
                   .attr('fill', thisApp.partyColors['R']).attr('stroke-width', 0);
                   
-                this.votePapers['1'].no = Raphael('bill-no-1', 150, 15);
-                this.votePapers['1'].no.rect(0, 0, voteYesDPer * 150, 15)
+                thisApp.votePapers['1'].no = Raphael('bill-no-1', 150, 15);
+                thisApp.votePapers['1'].no.rect(0, 0, voteYesDPer * 150, 15)
                   .attr('fill', thisApp.partyColors['D']).attr('stroke-width', 0);
-                this.votePapers['1'].no.rect(voteYesDPer * 150, 0, voteYesRPer * 150, 15)
+                thisApp.votePapers['1'].no.rect(voteYesDPer * 150, 0, voteYesRPer * 150, 15)
                   .attr('fill', thisApp.partyColors['R']).attr('stroke-width', 0);
               });
             };
             
-            KeyvotesApp.prototype.dataDir = function() {
+            KeyvotesApp.prototype.processHost = function() {
               if (location.host.indexOf('localhost') === -1) {
-                this.dir = 'https://s3.amazonaws.com/data.minnpost/' +
+                this.dataDir = 'https://s3.amazonaws.com/data.minnpost/' +
                   'projects/minnpost-' + this.appName + '/data/';
+                this.imageDir = 'https://s3.amazonaws.com/data.minnpost/' +
+                  'projects/minnpost-' + this.appName + '/images/';
               }
               
-              return this.dir;
+              return this;
             };
             
             return KeyvotesApp;
@@ -401,14 +405,16 @@
           keyvotesApp.reps = {
             'bachmann': {
               'name': 'Michelle Bachmann',
-              'image': '192px-Bachmann2011.jpg',
+              'image_large': 'michele_bachmann_100.jpg',
+              'image': 'michele_bachmann_56.jpg',
               'party': 'R',
               'district': '4th District',
               'type': 'representative'
             },
             'franken': {
               'name': 'Al Franken',
-              'image': '189px-Al_Franken_Official_Senate_Portrait.jpg',
+              'image_large': 'Al_Franken_100.jpg',
+              'image': 'Al_Franken_56.jpg',
               'party': 'D',
               'type': 'senator'
             }
