@@ -238,16 +238,17 @@
               this.dataDir = './data/';
               this.imageDir = './images/';
               this.partyColors = {
-                'D': '#1522AC',
-                'R': '#E42535'
+                'D': 'rgb(0, 113, 172)',
+                'R': 'rgb(161, 0, 15)'
               };
+              
+              this.processHost();
             }
             
             KeyvotesApp.prototype.launch = function() {
               // Do some binding
               _.bindAll(this);
             
-              this.processHost();
               this.drawGraph();
             };
             
@@ -260,6 +261,7 @@
               var axisStartX;
               var inverse;
               var circleAttr;
+              var minLoyalty;
               var axisLabel = {
                 'l': 'PARTY\nLOYALTY',
                 'r': 'BREAKING\nRANK'
@@ -279,7 +281,7 @@
               this.graphPaper.objs = {};
               
               // Draw axis
-              axisHeight = (height * .5);
+              axisHeight = (height * .4);
               axisWidth = (width * .9) - (width * .1);
               axisStartX = (width * .1);
               path = 'M' + (width * .1) + ' ' + axisHeight + 
@@ -301,17 +303,29 @@
               // Draw reps
               this.graphPaper.objs.reps = {};
               radius = width * .03;
+              minLoyalty = _.min(this.reps, function(r) {
+                return r.loyalty;
+              });
               _.each(this.reps, function(val, key, obj) {
                 // Set variables
                 var thisApp = this
                 count ++;
                 inverse = (count % 2) ? 1 : -1;
                 h = 50 * inverse;
-                x = axisStartX + (count * 150);
                 y = axisHeight - h;
                 color = this.partyColors[val.party];
                 this.graphPaper.objs.reps[count] = {};
                 
+                // Where on the spectrum
+                x = axisStartX + (axisWidth * .1) + (
+                  (1 - val.loyalty) * (1 / (1 - minLoyalty.loyalty))
+                  * (axisWidth * .8));
+                
+                // Special case for reps that would be on top of each other
+                if (val.high !== undefined && val.high === true) {
+                  h = h + (radius * inverse) + h;
+                  y = axisHeight - h;
+                }
                 
                 // Draw path from axis to circle
                 path = 'M' + x + ' ' + y + 
@@ -402,24 +416,18 @@
           
           // Make app instance
           keyvotesApp = new KeyvotesApp();
-          keyvotesApp.reps = {
-            'bachmann': {
-              'name': 'Michelle Bachmann',
-              'image_large': 'michele_bachmann_100.jpg',
-              'image': 'michele_bachmann_56.jpg',
-              'party': 'R',
-              'district': '4th District',
-              'type': 'representative'
-            },
-            'franken': {
-              'name': 'Al Franken',
-              'image_large': 'Al_Franken_100.jpg',
-              'image': 'Al_Franken_56.jpg',
-              'party': 'D',
-              'type': 'senator'
-            }
+          
+          // Get data
+          window.reps_callback = function(data) {
+            keyvotesApp.reps = data;
+            keyvotesApp.launch();
           };
-          keyvotesApp.launch();
+          $.ajax({
+            type: 'GET',
+            dataType: 'jsonp',
+            url: keyvotesApp.dataDir + 'reps.jsonp?callback=reps_callback',
+            jsonp: 'callback'
+          });
         });
       })(jQuery, window);
       
