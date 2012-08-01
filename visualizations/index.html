@@ -69,6 +69,7 @@
         clear: both;
         width: 450px;
         margin: 0 auto;
+        margin-top: 3em;
       }
       #rep-image {
         width: 100px;
@@ -81,6 +82,12 @@
       }
       .senator .rep-title {
         margin-top: 1em;
+      }
+      
+      .rep-divider {
+        width: 25%;
+        margin: 0 auto;
+        border-top: 2px solid #BDBDBD;
       }
       
       .rep-bills {
@@ -145,7 +152,6 @@
     
     <div id="minnpost-mn-congress-keyvotes-application">
       <div id="rep-graph-canvas"></div>
-      
       <div id="rep-container"></div>
       
       <p class="footnote"></p>
@@ -153,6 +159,7 @@
     
     <!-- Templates to be used in client side processing. -->
     <script id="template-rep" type="text/template">
+      <div class="rep-divider"></div>
       <div class="rep-container-inner <%= rep.type %>">
         <div class="rep-header clearfix">
           <div id="rep-image"></div>
@@ -179,31 +186,33 @@
             </thead>
             
             <tbody>
-              <tr>
-                <td>
-                  <div class="bill-title">Cutting House Salaries</div>
-                  <div class="bill-id">HB 1999</div>
-                </td>
-                <td>
-                  <div class="bill-overall bill-overall-yes">
-                    <span class="bill-overall-label">YES</span>
-                    <span class="bill-yes"></span><span>62-2</span>
-                  </div>
-                  <div class="bill-overall bill-overall-no">
-                    <span class="bill-overall-label">NO</span>
-                    <span class="bill-no"></span><span>62-2</span>
-                  </div>
-                </td>
-                <td class="against-party">
-                  <div class="bill-rep-vote">Yes</div>
-                  <div class="bill-rep-vote-loyalty">Against party</div>
-                </td>
-                <td class="column-last">
-                  <div class="bill-rep-comment">
-                    "I believe ..... .... .."
-                  </div>
-                </td>
-              </tr>
+              <% for (var b = 0; b < 3; b++) { %>
+                <tr>
+                  <td>
+                    <div class="bill-title">Cutting House Salaries</div>
+                    <div class="bill-id">HB 1999</div>
+                  </td>
+                  <td>
+                    <div class="bill-overall bill-overall-yes">
+                      <span class="bill-overall-label">YES</span>
+                      <span id="bill-yes-1" class="bill-yes"></span><span>62-2</span>
+                    </div>
+                    <div class="bill-overall bill-overall-no">
+                      <span class="bill-overall-label">NO</span>
+                      <span id="bill-no-1" class="bill-no"></span><span>62-2</span>
+                    </div>
+                  </td>
+                  <td class="against-party">
+                    <div class="bill-rep-vote">Yes</div>
+                    <div class="bill-rep-vote-loyalty">Against party</div>
+                  </td>
+                  <td class="column-last">
+                    <div class="bill-rep-comment">
+                      "I believe ..... .... .."
+                    </div>
+                  </td>
+                </tr>
+              <% } %>
             </tbody>
           </table>
         </div>
@@ -274,6 +283,10 @@
               path = 'M' + (width * .1) + ' ' + axisHeight + 
                 'L' + (width * .9) + ' ' + axisHeight;
               this.graphPaper.objs.axis = this.graphPaper.path(path).attr(axisAttr);
+              this.graphPaper.objs.lPoint = this.graphPaper.
+                circle(axisStartX, axisHeight, 3).attr(axisAttr);
+              this.graphPaper.objs.rPoint = this.graphPaper
+                .circle(axisStartX + axisWidth, axisHeight, 3).attr(axisAttr);
                 
               // Draw labels
               this.graphPaper.objs.lLabel = this.graphPaper.text(
@@ -341,7 +354,7 @@
                   'rep': repData
                 })).fadeIn();
                 
-                // Make graphics
+                // Make graphics, image
                 this.imgPaper = Raphael('rep-image', 100, 100);
                 this.imgPaper.objs = {};
                 this.imgPaper.objs.image = this.imgPaper.circle(50, 50, 47)
@@ -350,6 +363,24 @@
                     'stroke': thisApp.partyColors[repData.party],
                     'stroke-width': 4
                   })
+                  
+                // Make each graph for each bill
+                this.votePapers = {};
+                this.votePapers['1'] = {};
+                var voteYesDPer = 55 / (55 + 30);
+                var voteYesRPer = 30 / (55 + 30);
+                
+                this.votePapers['1'].yes = Raphael('bill-yes-1', 150, 15);
+                this.votePapers['1'].yes.rect(0, 0, voteYesDPer * 150, 15)
+                  .attr('fill', thisApp.partyColors['D']).attr('stroke-width', 0);
+                this.votePapers['1'].yes.rect(voteYesDPer * 150, 0, voteYesRPer * 150, 15)
+                  .attr('fill', thisApp.partyColors['R']).attr('stroke-width', 0);
+                  
+                this.votePapers['1'].no = Raphael('bill-no-1', 150, 15);
+                this.votePapers['1'].no.rect(0, 0, voteYesDPer * 150, 15)
+                  .attr('fill', thisApp.partyColors['D']).attr('stroke-width', 0);
+                this.votePapers['1'].no.rect(voteYesDPer * 150, 0, voteYesRPer * 150, 15)
+                  .attr('fill', thisApp.partyColors['R']).attr('stroke-width', 0);
               });
             };
             
