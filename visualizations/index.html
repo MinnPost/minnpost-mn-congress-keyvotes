@@ -257,6 +257,7 @@
             KeyvotesApp.prototype.processReps = function() {
               _.map(this.reps, function(val, key) {
                 val.lastName = val.name.split(' ')[1];
+                val.id = key;
                 
                 return val;
               });
@@ -272,6 +273,7 @@
               var inverse;
               var circleAttr;
               var minLoyalty;
+              var sortedReps;
               var axisLabel = {
                 'l': 'PARTY\nLOYALTY',
                 'r': 'BREAKING\nRANK'
@@ -316,7 +318,8 @@
               minLoyalty = _.min(this.reps, function(r) {
                 return r.loyalty;
               });
-              _.each(this.reps, function(val, key, obj) {
+              sortedReps = _.sortBy(this.reps, 'loyalty');
+              _.each(sortedReps, function(val, index, obj) {
                 // Set variables
                 var thisApp = this
                 count ++;
@@ -366,7 +369,7 @@
                     }
                   )
                   .click(function(e) {
-                    thisApp.openCand(key);
+                    thisApp.openCand(val.id);
                   });
               }, this);
             };
@@ -428,9 +431,18 @@
           keyvotesApp = new KeyvotesApp();
           
           // Get data
-          window.reps_callback = function(data) {
-            keyvotesApp.reps = data;
+          window.bills_callback = function(bills) {
+            keyvotesApp.bills = bills;
             keyvotesApp.launch();
+          };
+          window.reps_callback = function(reps) {
+            keyvotesApp.reps = reps;
+            $.ajax({
+              type: 'GET',
+              dataType: 'jsonp',
+              url: keyvotesApp.dataDir + 'bills.jsonp?callback=bills_callback',
+              jsonp: 'callback'
+            });
           };
           $.ajax({
             type: 'GET',
