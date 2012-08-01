@@ -46,6 +46,8 @@
       #minnpost-mn-congress-keyvotes-application {
         max-width: 960px;
         margin: 0 auto;
+        color: #555556;
+        font-family: Helvetica,Arial,Geneva,sans-serif;
       }
       .clear {
         clear: both;
@@ -62,16 +64,150 @@
         color: #414141;
         margin-top: 1em;
       }
+      
+      .rep-header {
+        clear: both;
+        width: 450px;
+        margin: 0 auto;
+      }
+      #rep-image {
+        width: 100px;
+        float: left;
+      }
+      .rep-title {
+        width: 330px;
+        float: right;
+        text-align: center;
+      }
+      .senator .rep-title {
+        margin-top: 1em;
+      }
+      
+      .rep-bills {
+        margin-top: 2em;
+      }
+      .rep-bills table {
+        width: 100%;
+      }
+      .rep-bills table thead {
+        border-bottom: 2px solid #BABABA;
+      }
+      .rep-bills table thead th {
+        text-align: center;
+      }
+      .rep-bills table thead th,
+      .rep-bills table tbody tr td {
+        padding: 1em;
+      }
+      .rep-bills table tbody tr {
+        border-bottom: 2px solid #BABABA;
+      }
+      .rep-bills table tbody tr td {
+        border-right: 2px solid #BABABA;
+        font-size: .85em;
+      }
+      .rep-bills table tbody tr td.column-last {
+        border-right: none;
+      }
+      .rep-bills .bill-title {
+        margin-bottom: 1em;
+      }
+      .rep-bills .bill-overall-yes {
+        margin-bottom: 1em;
+      }
+      .rep-bills .bill-overall span {
+        margin-right: 1em;
+        display: inline-block;
+      }
+      .rep-bills .bill-overall-label {
+        font-weight: bold;
+        width: 2em;
+        text-align: right;
+      }
+      .rep-bills .bill-overall .bill-yes,
+      .rep-bills .bill-overall .bill-no {
+        width: 150px;
+        height: 15px;
+        background-color: #EFEFEF;
+      }
+      .rep-bills .bill-rep-vote,
+      .rep-bills .bill-rep-vote-loyalty {
+        text-align: center;
+      }
+      .rep-bills .bill-rep-vote {
+        font-size: 2.5em;
+        margin-bottom: .5em;
+      }
+      .rep-bills .against-party {
+        font-weight: bold;
+      }
     </style>
     
     <div id="minnpost-mn-congress-keyvotes-application">
-      <div id="candidate-graph-canvas"></div>
+      <div id="rep-graph-canvas"></div>
+      
+      <div id="rep-container"></div>
       
       <p class="footnote"></p>
     </div>
     
     <!-- Templates to be used in client side processing. -->
-    <script id="template-geosearch" type="text/template">
+    <script id="template-rep" type="text/template">
+      <div class="rep-container-inner <%= rep.type %>">
+        <div class="rep-header clearfix">
+          <div id="rep-image"></div>
+          <div class="rep-title">
+            <h3><% if (rep.type === 'senator') { %>Sen.<% } else { %>Rep.<% } %>
+              <%= rep.name %> 
+              <% if (rep.type === 'representative') { %>
+                <br /><%= rep.district %>
+              <% } %>
+            </h3>
+            <p>Voted with DFL 94%</p>
+          </div>
+        </div>
+        
+        <br class="clear" />
+      
+        <div class="rep-bills">
+          <table>
+            <thead>
+              <tr>
+                <th>Key Bills*</th><th>Overall Voting Results</th>
+                <th>McCollum's Vote</th><th>Comments</th>
+              </tr>
+            </thead>
+            
+            <tbody>
+              <tr>
+                <td>
+                  <div class="bill-title">Cutting House Salaries</div>
+                  <div class="bill-id">HB 1999</div>
+                </td>
+                <td>
+                  <div class="bill-overall bill-overall-yes">
+                    <span class="bill-overall-label">YES</span>
+                    <span class="bill-yes"></span><span>62-2</span>
+                  </div>
+                  <div class="bill-overall bill-overall-no">
+                    <span class="bill-overall-label">NO</span>
+                    <span class="bill-no"></span><span>62-2</span>
+                  </div>
+                </td>
+                <td class="against-party">
+                  <div class="bill-rep-vote">Yes</div>
+                  <div class="bill-rep-vote-loyalty">Against party</div>
+                </td>
+                <td class="column-last">
+                  <div class="bill-rep-comment">
+                    "I believe ..... .... .."
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </script>
   
     <!-- jQuery if it is not there and jQueryCustom for Backbone --><!-- jQuery -->
@@ -107,19 +243,18 @@
             KeyvotesApp.prototype.drawGraph = function() {
               var width = $('#minnpost-mn-congress-keyvotes-application').width();
               var height = 300;
-              var i, x, y, h, color, path;
-              var count = 0;
-              var radius = 50;
+              var i, x, y, h, color, path, radius, count = 0;
               var axisHeight;
               var axisWidth;
               var axisStartX;
               var inverse;
+              var circleAttr;
               var axisLabel = {
                 'l': 'PARTY\nLOYALTY',
                 'r': 'BREAKING\nRANK'
               };
               var labelAttr = {
-                'font-family': 'NimbusSanNovConD-Bol, Helvetic',
+                'font-family': 'Helvetica,Arial,Geneva,sans-serif',
                 'font-size': width * .015,
                 'stroke': '#BABABA'
               };
@@ -129,7 +264,7 @@
               };
               
               // Draw canvas realtive to container and create plade to put objects
-              this.graphPaper = Raphael('candidate-graph-canvas', width, height);
+              this.graphPaper = Raphael('rep-graph-canvas', width, height);
               this.graphPaper.objs = {};
               
               // Draw axis
@@ -148,41 +283,74 @@
                 width - (width * .1), axisHeight + (height * .1), axisLabel['r'])
                 .attr(labelAttr);
 
-              // Draw candidates
-              this.graphPaper.objs.cands = {};
+              // Draw reps
+              this.graphPaper.objs.reps = {};
               radius = width * .03;
-              for (i in this.candidates) {
+              _.each(this.reps, function(val, key, obj) {
                 // Set variables
+                var thisApp = this
                 count ++;
                 inverse = (count % 2) ? 1 : -1;
                 h = 50 * inverse;
                 x = axisStartX + (count * 150);
                 y = axisHeight - h;
-                color = this.partyColors[this.candidates[i].party];
-                this.graphPaper.objs.cands[count] = {};
+                color = this.partyColors[val.party];
+                this.graphPaper.objs.reps[count] = {};
                 
                 
                 // Draw path from axis to circle
                 path = 'M' + x + ' ' + y + 
                   'L' + x + ' ' + axisHeight;
-                this.graphPaper.objs.cands[count].path = this.graphPaper.path(path)
+                this.graphPaper.objs.reps[count].path = this.graphPaper.path(path)
                   .attr('stroke-width', 4)
                   .attr('stroke', color);
                 
-                
-                this.graphPaper.objs.cands[count] = this.graphPaper.circle(x, y, radius)
-                  .attr('fill', 'url(images/' + this.candidates[i].image + ')')
-                  .attr('stroke', color)
-                  .attr('stroke-width', 4)
+                this.graphPaper.objs.reps[count] = this.graphPaper.circle(x, y, radius)
+                  .attr({
+                    'fill': 'url(images/' + val.image + ')',
+                    'stroke': color,
+                    'stroke-width': 4,
+                    'cursor': 'default'
+                  })
                   .hover(
                     function(e) {
-                      this.attr('r', radius * 1.2);
+                      this.attr({
+                        'r': radius * .9,
+                        'cursor': 'pointer'
+                      });
                     },
                     function(e) {
-                      this.attr('r', radius);
+                      this.attr({
+                        'r': radius,
+                        'cursor': 'default'
+                      });
                     }
-                  );
-              }
+                  )
+                  .click(function(e) {
+                    thisApp.openCand(key);
+                  });
+              }, this);
+            };
+            
+            KeyvotesApp.prototype.openCand = function(rep) {
+              var thisApp = this;
+              var repData = thisApp.reps[rep];
+              
+              $('#rep-container').fadeOut(function(e) {
+                $('#rep-container').html(_.template($('#template-rep').html(), {
+                  'rep': repData
+                })).fadeIn();
+                
+                // Make graphics
+                this.imgPaper = Raphael('rep-image', 100, 100);
+                this.imgPaper.objs = {};
+                this.imgPaper.objs.image = this.imgPaper.circle(50, 50, 47)
+                  .attr({
+                    'fill': 'url(images/' + repData.image + ')',
+                    'stroke': thisApp.partyColors[repData.party],
+                    'stroke-width': 4
+                  })
+              });
             };
             
             KeyvotesApp.prototype.dataDir = function() {
@@ -199,11 +367,12 @@
           
           // Make app instance
           keyvotesApp = new KeyvotesApp();
-          keyvotesApp.candidates = {
+          keyvotesApp.reps = {
             'bachmann': {
               'name': 'Michelle Bachmann',
               'image': '192px-Bachmann2011.jpg',
               'party': 'R',
+              'district': '4th District',
               'type': 'representative'
             },
             'franken': {
