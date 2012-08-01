@@ -170,7 +170,8 @@
                 <br /><%= rep.district %>
               <% } %>
             </h3>
-            <p>Voted with DFL 94%</p>
+            <p>Voted with <% if (rep.party == 'D') { %>DFL<% } else { %>Republicans<% } %>
+            <%= (rep.loyalty * 100).toFixed(1) %>%</p>
           </div>
         </div>
         
