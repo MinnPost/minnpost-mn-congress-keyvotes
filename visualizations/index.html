@@ -182,7 +182,7 @@
             <thead>
               <tr>
                 <th>Key Bills*</th><th>Overall Voting Results</th>
-                <th>McCollum's Vote</th><th>Comments</th>
+                <th><%= rep.lastName %>'s Vote</th><th>Comments</th>
               </tr>
             </thead>
             
@@ -244,13 +244,22 @@
               };
               
               this.processHost();
-            }
+            };
             
             KeyvotesApp.prototype.launch = function() {
               // Do some binding
               _.bindAll(this);
             
+              this.processReps();
               this.drawGraph();
+            };
+            
+            KeyvotesApp.prototype.processReps = function() {
+              _.map(this.reps, function(val, key) {
+                val.lastName = val.name.split(' ')[1];
+                
+                return val;
+              });
             };
             
             KeyvotesApp.prototype.drawGraph = function() {
