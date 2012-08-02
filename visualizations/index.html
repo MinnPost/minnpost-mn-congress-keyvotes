@@ -32,17 +32,6 @@
   <!-- START: Embeddable -->
   <div class="node-body fieldlayout node-field-body">
     <style type="text/css">
-      @import url('https://s3.amazonaws.com/data.minnpost/js/leaflet-master-20120531/leaflet.css');
-      @import url('https://s3.amazonaws.com/data.minnpost/js/leaflet-addons-master-20120531/leaflet-addons.css');
-    </style>
-    <!--[if lte IE 8]>
-      <style>
-        @import url('https://s3.amazonaws.com/data.minnpost/js/leaflet-master-20120531/leaflet.ie.css');
-        @import url('https://s3.amazonaws.com/data.minnpost/js/leaflet-addons-master-20120531/leaflet.ie.css');
-      </style>
-    <![endif]-->
-    
-    <style type="text/css">
       #minnpost-mn-congress-keyvotes-application {
         max-width: 960px;
         margin: 0 auto;
@@ -428,13 +417,14 @@
                   )
                   .click(function(e) {
                     thisApp.openCand(val.id);
-                  })
-                  .glow({
-                    'width': 5,
-                    'opacity': 0.3,
-                    'offsetx': 2,
-                    'offsety': 2
                   });
+                // Glow actually returns the glow object so no chain
+                this.graphPaper.objs.reps[count].glow({
+                  'width': 5,
+                  'opacity': 0.3,
+                  'offsetx': 2,
+                  'offsety': 2
+                });
               }, this);
             };
             
@@ -456,13 +446,13 @@
                     'fill': 'url(' + thisApp.imageDir + repData.image_large + ')',
                     'stroke': thisApp.partyColors[repData.party],
                     'stroke-width': 4
-                  })
-                  .glow({
-                    'width': 5,
-                    'opacity': 0.3,
-                    'offsetx': 2,
-                    'offsety': 2
                   });
+                thisApp.imgPaper.objs.image.glow({
+                  'width': 5,
+                  'opacity': 0.3,
+                  'offsetx': 2,
+                  'offsety': 2
+                });
                   
                 // Make each graph for each bill
                 for (i in repData.bills) {
