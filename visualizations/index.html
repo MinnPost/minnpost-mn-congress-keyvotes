@@ -56,19 +56,27 @@
       
       .rep-header {
         clear: both;
-        width: 450px;
-        margin: 0 auto;
         margin-top: 3em;
+      }
+      .rep-header-wrapper {
+        float: left;
+        position: relative;
+        left: 50%;
+      }
+      .rep-header-inner {
+        float: left;
+        position: relative;
+        left: -50%;
       }
       #rep-image {
         width: 110px;
         height: 110px;
         float: left;
+        margin-right: 1em;
       }
       .rep-title {
-        width: 330px;
-        float: right;
         text-align: center;
+        float: left;
       }
       .senator .rep-title {
         margin-top: 1em;
@@ -135,8 +143,8 @@
         font-size: 2.5em;
         margin-bottom: .5em;
       }
-      .rep-bills .bill-rep-vote {
-        font-weight: lighter;
+      .rep-bills .with-party {
+        color: #BABABA;
       }
       .rep-bills .against-party {
         font-weight: bold;
@@ -155,16 +163,21 @@
       <div class="rep-divider"></div>
       <div class="rep-container-inner <%= rep.type %>">
         <div class="rep-header clearfix">
-          <div id="rep-image"></div>
-          <div class="rep-title">
-            <h3><% if (rep.type === 'senator') { %>Sen.<% } else { %>Rep.<% } %>
-              <%= rep.name %> 
-              <% if (rep.type === 'representative') { %>
-                <br /><%= rep.district %>
-              <% } %>
-            </h3>
-            <p>Voted with <% if (rep.party == 'D') { %>DFL<% } else { %>Republicans<% } %>
-            <%= (rep.loyalty * 100).toFixed(1) %>%</p>
+          <div class="rep-header-wrapper">
+            <div class="rep-header-inner">
+              <div id="rep-image"></div>
+              <div class="rep-title">
+                <h3>
+                  <% if (rep.type === 'senator') { %>Sen.<% } else { %>Rep.<% } %>
+                  <%= rep.name %> 
+                </h3>
+                <% if (rep.type === 'representative') { %>
+                  <h4><%= rep.district %></h4>
+                <% } %>
+                <p>Voted with <% if (rep.party == 'D') { %>DFL<% } else { %>Republicans<% } %>
+                <%= (rep.loyalty * 100).toFixed(1) %>%</p>
+              </div>
+            </div>
           </div>
         </div>
         
@@ -198,7 +211,7 @@
                       <span><%= b['D Nays'] %>-<%= b['R Nays'] %></span>
                     </div>
                   </td>
-                  <td class="<% if (b[rep.id].indexOf('*') > 0) { %>against-party<% } %>">
+                  <td class="<% if (b[rep.id].indexOf('*') > 0) { %>against-party<% } else { %>with-party<% } %>">
                     <div class="bill-rep-vote">
                       <% if (b[rep.id] === 'Aye' || b[rep.id] === 'Aye*') { %>
                         Yes
