@@ -293,7 +293,7 @@
               this.graphPaper.objs = {};
               
               // Draw axis
-              axisHeight = (height * .4);
+              axisHeight = (height * .6);
               axisWidth = (width * .9) - (width * .1);
               axisStartX = (width * .1);
               path = 'M' + (width * .1) + ' ' + axisHeight + 
@@ -323,7 +323,7 @@
                 // Set variables
                 var thisApp = this
                 count ++;
-                inverse = (count % 2) ? 1 : -1;
+                inverse = (count % 2) ? -1 : 1;
                 h = 50 * inverse;
                 y = axisHeight - h;
                 color = this.partyColors[val.party];
@@ -338,6 +338,7 @@
                 if (val.high !== undefined && val.high === true) {
                   h = h + (radius * inverse) + h;
                   y = axisHeight - h;
+                  x = x + 8;
                 }
                 
                 // Draw path from axis to circle
