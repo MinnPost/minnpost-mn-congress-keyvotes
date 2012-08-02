@@ -125,9 +125,12 @@
         display: inline-block;
       }
       .rep-bills .bill-overall-label {
-        font-weight: bold;
-        width: 2em;
+        width: 5em;
         text-align: right;
+      }
+      .rep-bills .bill-overall-label span {
+        font-weight: bold;
+        margin: 0;
       }
       .rep-bills .bill-overall .bill-yes,
       .rep-bills .bill-overall .bill-no {
@@ -201,12 +204,16 @@
                   </td>
                   <td>
                     <div class="bill-overall bill-overall-yes">
-                      <span class="bill-overall-label">YES</span>
+                      <span class="bill-overall-label">
+                        <span>YES</span>&nbsp;(<%= b['D Ayes'] + b['R Ayes'] %>)
+                      </span>
                       <span id="bill-yes-<%= key %>" class="bill-yes"></span>
                       <span><%= b['D Ayes'] %>-<%= b['R Ayes'] %></span>
                     </div>
                     <div class="bill-overall bill-overall-no">
-                      <span class="bill-overall-label">NO</span>
+                      <span class="bill-overall-label">
+                        <span>NO</span>&nbsp;(<%= b['D Nays'] + b['R Nays'] %>)
+                      </span>
                       <span id="bill-no-<%= key %>" class="bill-no"></span>
                       <span><%= b['D Nays'] %>-<%= b['R Nays'] %></span>
                     </div>
