@@ -188,29 +188,37 @@
             </thead>
             
             <tbody>
-              <% for (var b = 0; b < 3; b++) { %>
+              <% for (var key in rep.bills) { var b = rep.bills[key] %>
                 <tr>
                   <td>
-                    <div class="bill-title">Cutting House Salaries</div>
-                    <div class="bill-id">HB 1999</div>
+                    <div class="bill-title"><%= b['Bill'] %></div>
+                    <div class="bill-id">HB ????</div>
                   </td>
                   <td>
                     <div class="bill-overall bill-overall-yes">
                       <span class="bill-overall-label">YES</span>
-                      <span id="bill-yes-1" class="bill-yes"></span><span>62-2</span>
+                      <span id="bill-yes-<%= key %>" class="bill-yes"></span>
+                      <span><%= b['D Ayes'] %>-<%= b['R Ayes'] %></span>
                     </div>
                     <div class="bill-overall bill-overall-no">
                       <span class="bill-overall-label">NO</span>
-                      <span id="bill-no-1" class="bill-no"></span><span>62-2</span>
+                      <span id="bill-no-<%= key %>" class="bill-no"></span>
+                      <span><%= b['D Nays'] %>-<%= b['R Nays'] %></span>
                     </div>
                   </td>
-                  <td class="against-party">
-                    <div class="bill-rep-vote">Yes</div>
-                    <div class="bill-rep-vote-loyalty">Against party</div>
+                  <td class="<% if (b.against) { %>against-party<% } %>">
+                    <div class="bill-rep-vote">
+                      <% if (b[rep.id] === 'Aye') { %>Yes<% } else { %>No<% } %>
+                    </div>
+                    <div class="bill-rep-vote-loyalty">
+                      <% if (b.against) { %>Against party<% } else { %>With party<% } %>
+                    </div>
                   </td>
                   <td class="column-last">
                     <div class="bill-rep-comment">
-                      "I believe ..... .... .."
+                      <% if (b.comments !== undefined) { %>
+                        <%= b.comments %>
+                      <% } %>
                     </div>
                   </td>
                 </tr>
@@ -251,14 +259,57 @@
               // Do some binding
               _.bindAll(this);
             
+              this.processBills();
               this.processReps();
               this.drawGraph();
             };
             
             KeyvotesApp.prototype.processReps = function() {
-              _.map(this.reps, function(val, key) {
-                val.lastName = val.name.split(' ')[1];
-                val.id = key;
+              _.map(this.reps, function(rep, key) {
+                var totalBills;
+                var loyaltyVote = 0;
+              
+                // Assign some helpful values
+                rep.lastName = rep.name.split(' ')[1];
+                rep.id = key;
+                
+                // Attach filtered bills
+                rep.bills = _.filter(this.bills, function(bill) {
+                  return (bill[rep.id] !== undefined && bill[rep.id] !== '');
+                });
+                
+                // Determine loyalty;
+                totalBills = rep.bills.length;
+                _.map(rep.bills, function(b, k) {
+                  if (b[rep.id].indexOf('*') > 0) {
+                    b.against = true;
+                    b[rep.id] = b[rep.id].replace('*', '');
+                  }
+                  else {
+                    loyaltyVote++;
+                    b.against = false;
+                  }
+                  
+                  return b;
+                });
+                rep.loyalty = loyaltyVote / totalBills;
+                
+                return rep;
+              }, this);
+            };
+            
+            KeyvotesApp.prototype.processBills = function() {
+              _.map(this.bills, function(val, key) {
+                val['D Ayes'] = parseInt(val['D Ayes']);
+                val['D Nays'] = parseInt(val['D Nays']);
+                val['R Ayes'] = parseInt(val['R Ayes']);
+                val['R Nays'] = parseInt(val['R Nays']);
+                
+                val.totalVotes = val['D Ayes'] + val['D Nays'] + val['R Ayes'] + val['R Nays'];
+                val.perDY = val['D Ayes'] / val.totalVotes;
+                val.perDN = val['D Nays'] / val.totalVotes;
+                val.perRY = val['R Ayes'] / val.totalVotes;
+                val.perRN = val['R Nays'] / val.totalVotes;
                 
                 return val;
               });
@@ -384,6 +435,7 @@
             
             KeyvotesApp.prototype.openCand = function(rep) {
               var thisApp = this;
+              var i;
               var repData = thisApp.reps[rep];
               
               $('#rep-container').fadeOut(function(e) {
@@ -408,22 +460,24 @@
                   });
                   
                 // Make each graph for each bill
-                thisApp.votePapers = {};
-                thisApp.votePapers['1'] = {};
-                var voteYesDPer = 55 / (55 + 30);
-                var voteYesRPer = 30 / (55 + 30);
-                
-                thisApp.votePapers['1'].yes = Raphael('bill-yes-1', 150, 15);
-                thisApp.votePapers['1'].yes.rect(0, 0, voteYesDPer * 150, 15)
-                  .attr('fill', thisApp.partyColors['D']).attr('stroke-width', 0);
-                thisApp.votePapers['1'].yes.rect(voteYesDPer * 150, 0, voteYesRPer * 150, 15)
-                  .attr('fill', thisApp.partyColors['R']).attr('stroke-width', 0);
+                for (i in repData.bills) {
+                  thisApp.votePapers = {};
+                  thisApp.votePapers[i] = {};
                   
-                thisApp.votePapers['1'].no = Raphael('bill-no-1', 150, 15);
-                thisApp.votePapers['1'].no.rect(0, 0, voteYesDPer * 150, 15)
-                  .attr('fill', thisApp.partyColors['D']).attr('stroke-width', 0);
-                thisApp.votePapers['1'].no.rect(voteYesDPer * 150, 0, voteYesRPer * 150, 15)
-                  .attr('fill', thisApp.partyColors['R']).attr('stroke-width', 0);
+                  thisApp.votePapers[i].yes = Raphael('bill-yes-' + i, 150, 15);
+                  thisApp.votePapers[i].yes.rect(0, 0, repData.bills[i].perDY * 150, 15)
+                    .attr('fill', thisApp.partyColors['D']).attr('stroke-width', 0);
+                  thisApp.votePapers[i].yes.rect(repData.bills[i].perDY * 150, 0, 
+                    repData.bills[i].perRY * 150, 15)
+                    .attr('fill', thisApp.partyColors['R']).attr('stroke-width', 0);
+                    
+                  thisApp.votePapers[i].no = Raphael('bill-no-' + i, 150, 15);
+                  thisApp.votePapers[i].no.rect(0, 0, repData.bills[i].perDN * 150, 15)
+                    .attr('fill', thisApp.partyColors['D']).attr('stroke-width', 0);
+                  thisApp.votePapers[i].no.rect(repData.bills[i].perDN * 150, 0, 
+                    repData.bills[i].perRN * 150, 15)
+                    .attr('fill', thisApp.partyColors['R']).attr('stroke-width', 0);
+                }
               });
             };
             
