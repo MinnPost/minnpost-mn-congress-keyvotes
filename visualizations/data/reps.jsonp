@@ -1,81 +1,91 @@
 reps_callback({
   'walz': {
     'name': 'Tim Walz',
-    'image_large': 'Tim_Walz_100.jpg',
+    'imageLarge': 'Tim_Walz_100.jpg',
     'image': 'Tim_Walz_56.jpg',
     'party': 'D',
     'district': '1st District',
-    'type': 'representative'
+    'type': 'representative',
+    'overallLoyalty': 0.88
   },
   'kline': {
     'name': 'John Kline',
-    'image_large': 'John_kline_100.jpg',
+    'imageLarge': 'John_kline_100.jpg',
     'image': 'John_kline_56.jpg',
     'party': 'R',
     'district': '2nd District',
     'type': 'representative',
-    'high': true
+    'overallLoyalty': 0.97
   },
   'paulsen': {
     'name': 'Erik Paulsen',
-    'image_large': 'Erik_Paulsen_100.jpg',
+    'imageLarge': 'Erik_Paulsen_100.jpg',
     'image': 'Erik_Paulsen_56.jpg',
     'party': 'R',
     'district': '3rd District',
-    'type': 'representative'
+    'type': 'representative',
+    'overallLoyalty': 0.93
   },
   'mccollum': {
     'name': 'Betty McCollum',
-    'image_large': 'Betty_McCollum_100.jpg',
+    'imageLarge': 'Betty_McCollum_100.jpg',
     'image': 'Betty_McCollum_56.jpg',
     'party': 'D',
     'district': '4th District',
-    'type': 'representative'
+    'type': 'representative',
+    'overallLoyalty': 0.94
   },
   'ellison': {
     'name': 'Keith Ellison',
-    'image_large': 'Keith_ellison_100.jpg',
+    'imageLarge': 'Keith_ellison_100.jpg',
     'image': 'Keith_ellison_56.jpg',
     'party': 'D',
     'district': '5th District',
-    'type': 'representative'
+    'type': 'representative',
+    'overallLoyalty': 0.93
   },
   'bachmann': {
     'name': 'Michele Bachmann',
-    'image_large': 'michele_bachmann_100.jpg',
+    'imageLarge': 'michele_bachmann_100.jpg',
     'image': 'michele_bachmann_56.jpg',
     'party': 'R',
     'district': '6th District',
-    'type': 'representative'
+    'type': 'representative',
+    'overallLoyalty': 0.92
   },
   'peterson': {
     'name': 'Colin Peterson',
-    'image_large': 'Colin_Peterson_100.jpg',
+    'imageLarge': 'Colin_Peterson_100.jpg',
     'image': 'Colin_Peterson_56.jpg',
     'party': 'D',
     'district': '7th District',
-    'type': 'representative'
+    'type': 'representative',
+    'overallLoyaltyEffective': 0.57,
+    'overallLoyalty': 0.82
   },
   'cravaack': {
     'name': 'Chip Cravaack',
-    'image_large': 'Chip_Cravaack_100.jpg',
+    'imageLarge': 'Chip_Cravaack_100.jpg',
     'image': 'Chip_Cravaack_56.jpg',
     'party': 'R',
     'district': '8th District',
-    'type': 'representative'
+    'type': 'representative',
+    'overallLoyalty': 0.92
   },
   'franken': {
     'name': 'Al Franken',
-    'image_large': 'Al_Franken_100.jpg',
+    'imageLarge': 'Al_Franken_100.jpg',
     'image': 'Al_Franken_56.jpg',
     'party': 'D',
-    'type': 'senator'
+    'type': 'senator',
+    'overallLoyalty': 0.96
   },
   'klobuchar': {
     'name': 'Amy Klobuchar',
-    'image_large': 'Amy_Klobuchar_100.jpg',
+    'imageLarge': 'Amy_Klobuchar_100.jpg',
     'image': 'Amy_Klobuchar_56.jpg',
     'party': 'D',
-    'type': 'senator'
+    'type': 'senator',
+    'overallLoyalty': 0.93
   }
 });

@@ -176,7 +176,12 @@
                   <h4><%= rep.district %></h4>
                 <% } %>
                 <p>Voted with <% if (rep.party == 'D') { %>DFL<% } else { %>Republicans<% } %>
-                <%= (rep.loyalty * 100).toFixed(1) %>%</p>
+                  <% if (rep.overallLoyaltyEffective !== undefined) { %>
+                    <%= (rep.overallLoyaltyEffective * 100).toFixed(1) %>%
+                  <% } else { %>
+                    <%= (rep.loyalty * 100).toFixed(1) %>%
+                  <% } %>
+                </p>
               </div>
             </div>
           </div>
@@ -298,13 +303,7 @@
                 });
                 
                 // Determine loyalty;
-                totalBills = rep.bills.length;
-                _.each(rep.bills, function(b, k) {
-                  if (b[rep.id].indexOf('*') < 0) {
-                    loyaltyVote++;
-                  }
-                });
-                rep.loyalty = loyaltyVote / totalBills;
+                rep.loyalty = rep.overallLoyalty;
                 
                 return rep;
               }, this);
@@ -330,14 +329,16 @@
             KeyvotesApp.prototype.drawGraph = function() {
               var width = $('#minnpost-mn-congress-keyvotes-application').width();
               var height = 300;
-              var i, x, y, h, color, path, radius, count = 0;
+              var i, x, y, h, color, path, radius, scale, count = 0;
               var axisHeight;
               var axisWidth;
               var axisStartX;
               var inverse;
               var circleAttr;
               var minLoyalty;
+              var maxLoyalty;
               var sortedReps;
+              var groupedLoyalty = {};
               var axisLabel = {
                 'l': 'PARTY\nLOYALTY',
                 'r': 'BREAKING\nRANK'
@@ -357,7 +358,7 @@
               this.graphPaper.objs = {};
               
               // Draw axis
-              axisHeight = (height * .6);
+              axisHeight = (height * .4);
               axisWidth = (width * .9) - (width * .1);
               axisStartX = (width * .1);
               path = 'M' + (width * .1) + ' ' + axisHeight + 
@@ -382,8 +383,22 @@
               minLoyalty = _.min(this.reps, function(r) {
                 return r.loyalty;
               });
+              maxLoyalty = _.max(this.reps, function(r) {
+                return r.loyalty;
+              });
+              
               sortedReps = _.sortBy(this.reps, 'loyalty');
               _.each(sortedReps, function(val, index, obj) {
+                // Figure out if repeated loyalty so we can space
+                // correctly
+                if (groupedLoyalty[val.loyalty] === undefined) {
+                  groupedLoyalty[val.loyalty] = 0;
+                }
+                groupedLoyalty[val.loyalty]++;
+                if (groupedLoyalty[val.loyalty] % 3 === 0) {
+                  val.high = true;
+                }
+              
                 // Set variables
                 var thisApp = this
                 count ++;
@@ -395,14 +410,14 @@
                 
                 // Where on the spectrum
                 x = axisStartX + (axisWidth * .1) + (
-                  (1 - val.loyalty) * (1 / (1 - minLoyalty.loyalty))
-                  * (axisWidth * .8));
+                  (1 - ((val.loyalty - minLoyalty.loyalty) / (maxLoyalty.loyalty - minLoyalty.loyalty))) *
+                  (axisWidth * .8));
                 
                 // Special case for reps that would be on top of each other
                 if (val.high !== undefined && val.high === true) {
                   h = h + (radius * inverse) + h;
                   y = axisHeight - h;
-                  x = x + 8;
+                  x = x + 5;
                 }
                 
                 // Draw path from axis to circle
@@ -412,7 +427,7 @@
                   .attr('stroke-width', 4)
                   .attr('stroke', color);
                 
-                this.graphPaper.objs.reps[count] = this.graphPaper.circle(x, y, radius)
+                this.graphPaper.objs.reps[count].circle = this.graphPaper.circle(x, y, radius)
                   .attr({
                     'fill': 'url(' + this.imageDir + val.image + ')',
                     'stroke': color,
@@ -437,12 +452,17 @@
                     thisApp.openCand(val.id);
                   });
                 // Glow actually returns the glow object so no chain
-                this.graphPaper.objs.reps[count].glow({
+                this.graphPaper.objs.reps[count].circle.glow({
                   'width': 5,
                   'opacity': 0.3,
                   'offsetx': 2,
                   'offsety': 2
                 });
+                
+                // Since high values are on top, send, back;
+                if (val.high !== undefined && val.high === true) {
+                  this.graphPaper.objs.reps[count].path.toBack();
+                }
               }, this);
             };
             
@@ -461,7 +481,7 @@
                 thisApp.imgPaper.objs = {};
                 thisApp.imgPaper.objs.image = thisApp.imgPaper.circle(50, 50, 47)
                   .attr({
-                    'fill': 'url(' + thisApp.imageDir + repData.image_large + ')',
+                    'fill': 'url(' + thisApp.imageDir + repData.imageLarge + ')',
                     'stroke': thisApp.partyColors[repData.party],
                     'stroke-width': 4
                   });
