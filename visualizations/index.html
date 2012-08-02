@@ -352,6 +352,18 @@
                 'stroke-width': 4,
                 'stroke': '#BABABA'
               };
+              var tooltipTextAttr = {
+                'font-family': 'Helvetica,Arial,Geneva,sans-serif',
+                'font-size': width * .015,
+                'font-weight': 'lighter',
+                'fill': '#FFFFFF',
+                'stroke': '#FFFFFF'
+              };
+              var tooltipAttr = {
+                'stroke-width': 0,
+                'fill-opacity': 0.9,
+                'fill': '#555556'
+              };
               
               // Draw canvas realtive to container and create plade to put objects
               this.graphPaper = Raphael('rep-graph-canvas', width, height);
@@ -440,12 +452,14 @@
                         'stroke-width': 6,
                         'cursor': 'pointer'
                       });
+                      this.toolip.toFront().show();
                     },
                     function(e) {
                       this.attr({
                         'stroke-width': 4,
                         'cursor': 'default'
                       });
+                      this.toolip.hide();
                     }
                   )
                   .click(function(e) {
@@ -463,6 +477,15 @@
                 if (val.high !== undefined && val.high === true) {
                   this.graphPaper.objs.reps[count].path.toBack();
                 }
+                
+                // Create tooltips
+                this.graphPaper.set
+                this.graphPaper.objs.reps[count].circle.toolip = this.graphPaper.set();
+                this.graphPaper.objs.reps[count].circle.toolip.push(
+                  this.graphPaper.rect(x - (width * .15 / 2), y + h - 12.5,
+                    width * .15, 25, 5).attr(tooltipAttr).hide(),
+                  this.graphPaper.text(x, y + h, val.name).attr(tooltipTextAttr).hide()
+                );
               }, this);
             };
             
@@ -470,6 +493,11 @@
               var thisApp = this;
               var i;
               var repData = thisApp.reps[rep];
+              
+              if (thisApp.currentCand !== undefined && thisApp.currentCand == rep) {
+                return;
+              }
+              thisApp.currentCand = rep;
               
               $('#rep-container').fadeOut(function(e) {
                 $('#rep-container').html(_.template($('#template-rep').html(), {
