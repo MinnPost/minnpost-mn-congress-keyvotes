@@ -41,7 +41,7 @@ reps_callback({
     'type': 'representative'
   },
   'bachmann': {
-    'name': 'Michelle Bachmann',
+    'name': 'Michele Bachmann',
     'image_large': 'michele_bachmann_100.jpg',
     'image': 'michele_bachmann_56.jpg',
     'party': 'R',
