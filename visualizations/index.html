@@ -146,6 +146,9 @@
         font-size: 2.5em;
         margin-bottom: .5em;
       }
+      .rep-bills .bill-rep-vote {
+        font-weight: lighter;
+      }
       .rep-bills .against-party {
         font-weight: bold;
       }
@@ -206,12 +209,22 @@
                       <span><%= b['D Nays'] %>-<%= b['R Nays'] %></span>
                     </div>
                   </td>
-                  <td class="<% if (b.against) { %>against-party<% } %>">
+                  <td class="<% if (b[rep.id].indexOf('*') > 0) { %>against-party<% } %>">
                     <div class="bill-rep-vote">
-                      <% if (b[rep.id] === 'Aye') { %>Yes<% } else { %>No<% } %>
+                      <% if (b[rep.id] === 'Aye' || b[rep.id] === 'Aye*') { %>
+                        Yes
+                      <% } else if (b[rep.id] === 'Nay' || b[rep.id] === 'Nay*') { %>
+                        No
+                      <% } else { %>
+                        No vote
+                      <% } %>
                     </div>
                     <div class="bill-rep-vote-loyalty">
-                      <% if (b.against) { %>Against party<% } else { %>With party<% } %>
+                      <% if (b[rep.id].indexOf('*') > 0) { %>
+                        Against party
+                      <% } else { %>
+                        With party
+                      <% } %>
                     </div>
                   </td>
                   <td class="column-last">
@@ -244,7 +257,6 @@
           var KeyvotesApp = (function() {
             function KeyvotesApp() {
               this.appName = 'mn-congress-keyvotes';
-              this.data =  {};
               this.dataDir = './data/';
               this.imageDir = './images/';
               this.partyColors = {
@@ -280,17 +292,10 @@
                 
                 // Determine loyalty;
                 totalBills = rep.bills.length;
-                _.map(rep.bills, function(b, k) {
-                  if (b[rep.id].indexOf('*') > 0) {
-                    b.against = true;
-                    b[rep.id] = b[rep.id].replace('*', '');
-                  }
-                  else {
+                _.each(rep.bills, function(b, k) {
+                  if (b[rep.id].indexOf('*') < 0) {
                     loyaltyVote++;
-                    b.against = false;
                   }
-                  
-                  return b;
                 });
                 rep.loyalty = loyaltyVote / totalBills;
                 
