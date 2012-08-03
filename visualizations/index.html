@@ -560,9 +560,18 @@
           keyvotesApp = new KeyvotesApp();
           
           // Get data
+          window.comments_callback = function(comments) {
+            keyvotesApp.comments = comments;
+            keyvotesApp.launch();
+          };
           window.bills_callback = function(bills) {
             keyvotesApp.bills = bills;
-            keyvotesApp.launch();
+            $.ajax({
+              type: 'GET',
+              dataType: 'jsonp',
+              url: keyvotesApp.dataDir + 'comments.jsonp?callback=comments_callback',
+              jsonp: 'callback'
+            });
           };
           window.reps_callback = function(reps) {
             keyvotesApp.reps = reps;
