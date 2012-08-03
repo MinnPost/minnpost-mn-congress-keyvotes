@@ -1,0 +1,137 @@
+comments_callback({
+  'walz': {
+    '8': {
+      'comment': 'I am pleased that an agreement has been reached and I will vote in favor of the legislation to keep the government running. I continue to believe we can be fiscally responsible and make government more efficient.  Republicans and Democrats need to work together to come up with real solutions to our fiscal policy.',
+      'link': '',
+      'quote': true
+    },
+    '14': {},
+    '18': {
+      'comment': 'There are just too many unanswered questions surrounding "Fast and Furious," and the American people deserve to know more. Therefore, I will support the vote to hold the Attorney General in contempt for failure to provide requested information.',
+      'link': 'http://www.minnpost.com/political-agenda/2012/06/dem-congressmen-walz-and-peterson-join-republicans-holder-contempt-vote',
+      'quote': true
+    },
+    '35': {
+      'comment': 'Walz said he supports keeping taxes low on the middle class, and while he supports President Obama’s plan to raise taxes on those making more than $250,000, he voted with Republicans on this bill because “the Democratic plan [in the Senate] … failed to add fairness to the estate tax to protect family farmers.”',
+      'link': ''
+    }
+  },
+  'mccollum': {
+    '5': {},
+    '8': {},
+    '10': {
+      'comment': 'Tying massive cuts to a debt ceiling increase is completely unnecessary, totally counterproductive, and it will make America's job crisis even worse. And, with this bill, the Republicans are tossing the heavy burden of deficit reduction onto America's middle class without asking even one penny from the nation's wealthiest individuals and corporations.',
+      'link': '',
+      'quote': true
+    },
+    '18': {
+      'comment': 'The only reason this unprecedented attack is taking place against our country’s first African American Attorney General is because the Tea Party Republican majority is pandering to birthers, NRA members, and other extremist right-wingers obsessed with destroying President Obama. Eric Holder has my full support, and I reject this transparent political abuse of power.',
+      'link': '',
+      'quote': true
+    }
+  },
+  'ellison': {
+    '1': {},
+    '4': {},
+    '6': {},
+    '10': {
+      'comment': 'This is the wrong approach for our economy at the wrong time, and it goes against our basic values … For that reason, we and many of our members will be voting no.',
+      'link': 'http://www.minnpost.com/dc-dispatches/2011/08/ellisons-progressive-caucus-comes-out-against-debt-deal',
+      'quote': true
+    },
+    '11': {
+      'comment': 'I cannot in good conscience vote for a bill that hurts children by taking money out of education, slashes support for road and bridge repair, and ends essential medical research.  It takes away assistance from people hurt by the economic downturn, including many of our neighbors and family members. Most worrisome, it puts thousands more Americans out of work at time when unemployment is above 9 percent. Republicans continue to push an agenda that puts more Americans out of work.',
+      'link': '',
+      'quote': true
+    },
+    '15': {
+      'comment': 'Today’s agreement will help middle-class families who will not see their paychecks shrink, but it does not do enough for the thousands of Minnesotans who have lost their jobs through no fault of their own. … <br />
+This bill also shortchanges new federal public servants, whose retirements are being cut to the tune of $15 billion. There are currently 18,000 valued federal workers in Minnesota. These middle-class workers are some of America’s heroes.  They take care of our veterans, repair our roads and bridges, and maintain our national parks and waterways.  It is unfair to cut into the retirement benefits of new federal employees simply to pay for benefits for others.',
+      'link': '',
+      'quote': true
+    },
+    '18': {
+      'comment': 'The investigation has ignored the fact that the Bush Administration started this program, which let weapons traffickers buy thousands of guns. …  Attorney General Eric Holder condemned the approach. He then called for an independent investigation of the botched program, testified before Congress on the matter seven times and provided more than 6,000 pages of documents. …  It’s time to end the partisan witch hunt and to start working on the American people’s behalf.',
+      'link': '',
+      'quote': true
+    }
+  },
+  'bachmann': {
+    '4': {
+      'comment': 'I will be voting to continue the fight against ObamaCare. That means I have to vote against the temporary government funding measure that has been proposed by House leaders. This latest Continuing Resolution (CR) does not contain necessary language to defund ObamaCare and stop its implementation.',
+      'link': '',
+      'quote': true
+    },
+    '6': {
+      'comment': 'The deal that was reached tonight is a disappointment for me and for millions of Americans who expected $100 billion in cuts, who wanted to make sure their tax dollars stopped flowing to the nation’s largest abortion provider, and who wanted us to defund ObamaCare. Instead, we’ve been asked to settle for $39 billion in cuts, even as we continue to fund Planned Parenthood and the implementation of ObamaCare.',
+      'link': '',
+      'quote': true
+    },
+    '8': {
+      'comment': 'The American people gave us a mandate last fall to cut spending, and to fight to repeal ObamaCare and defund Planned Parenthood. This CR fell woefully short in terms of spending cuts, and left the other two key issues as stand-alone amendments. I was pleased to vote for both of those amendments, but they were defeated in the Senate.',
+      'link': '',
+      'quote': true
+    },
+    '9': {
+      'comment': '',
+      'link': ''
+    },
+    '10': {
+      'comment': '',
+      'link': ''
+    },
+    '15': {
+      'comment': '',
+      'link': ''
+    }
+  },
+  'peterson': {
+    '3': {
+      'comment': '',
+      'link': ''
+    },
+    '8': {
+      'comment': '',
+      'link': ''
+    },
+    '12': {
+      'comment': '',
+      'link': ''
+    },
+    '15': {
+      'comment': '',
+      'link': ''
+    },
+    '18': {
+      'comment': 'After continuing to review the facts, I believe the Justice Department failed to provide access to the necessary documents and continued to stall this investigation. I do not take this vote lightly. I feel that it is the responsibility of Congress to provide oversight of the executive branch and to act when it seems there's an unwillingness to provide answers.',
+      'link': '',
+      'quote': true
+    },
+    '35': {
+      'comment': 'I don’t think we should be raising taxes until we get some stability in the economy … The problem was the Democratic plan was it didn’t extend the estate tax provisions ... so because of that I voted against the D plan and voted for the R plan. I didn’t like any of them.',
+      'link': '',
+      'quote': true
+    }
+  },
+  'cravaack': {
+    '8': {
+      'comment': 'This long-term bill to fund the federal government moves the ball in the right direction and stands in stark contrast to the free spending ways of the most recent Congresses. However, it simply does not go far enough in addressing America’s dire fiscal situation. … I do not believe this legislation made sufficient cuts, therefore I was unable to support it.',
+      'link': '',
+      'quote': true
+    },
+    '9': {
+      'comment': 'At the time, Cravaack said he supported a plan that cut more from the deficit than the Boehner plan did. “I’ve crunched numbers the past few days trying to find every way I could possibly think of to support this bill,” he said. “But the numbers just weren’t there for me.”',
+      'link': 'http://www.minnpost.com/dc-dispatches/2011/07/us-house-passes-boehner-debt-limit-plan',
+    },
+    '10': {
+      'comment': 'The measure approved by the House does very little to reduce our bloated deficit; it merely slows its growth. This legislation will not ensure our nation’s AAA credit rating nor provide for a Balanced Budget Amendment before the debt limit is raised.  Regrettably, this compromise risks cuts to seniors’ Medicare and veterans’ benefits, and dangerous cuts to military funding.”',
+      'link': ''
+      'quote': true
+    }
+  },
+  'franken': {
+    '21': {
+      'comment': 'Franken supported the repeal of the Affordable Care Act’s 1099 business tax reporting requirement and would vote to rescind it in February (the bill eventually became law). His office said he opposed this attempt, however, because of the spending offsets associated with it.',
+      'link': '',
+    }
+});
