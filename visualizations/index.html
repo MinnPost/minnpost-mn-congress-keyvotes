@@ -111,6 +111,7 @@
       }
       .rep-bills table tbody tr td.column-last {
         border-right: none;
+        width: 25%;
       }
       .rep-bills .bill-title {
         margin-bottom: 1em;
@@ -149,6 +150,19 @@
       }
       .rep-bills .against-party {
         font-weight: bold;
+      }
+      .rep-bills .bill-rep-comment {
+        height: 3em;
+        overflow: hidden;
+      }
+      .rep-bills .bill-rep-comment blockquote {
+        margin: 0;
+      }
+      .rep-bills .show-comment {
+        display: block;
+        width: 100%;
+        text-align: right;
+        padding-top: .5em;
       }
     </style>
     
@@ -203,7 +217,7 @@
                 <tr>
                   <td>
                     <div class="bill-title"><%= b['Bill'] %></div>
-                    <div class="bill-id">HB ????</div>
+                    <div class="bill-id"></div>
                   </td>
                   <td>
                     <div class="bill-overall bill-overall-yes">
@@ -240,9 +254,28 @@
                     </div>
                   </td>
                   <td class="column-last">
-                    <div class="bill-rep-comment">
-                      <% if (b.comments !== undefined) { %>
-                        <%= b.comments %>
+                    <div class="bill-rep-comment-wrapper">
+                      <% if (_.isObject(rep.comments) &&
+                        _.isObject(rep.comments[rep.id]) &&
+                        _.isObject(rep.comments[rep.id][b.id]) &&
+                        !_.isEmpty(rep.comments[rep.id][b.id]) &&
+                        rep.comments[rep.id][b.id].comment != '') { %>
+                        <div class="bill-rep-comment">
+                          <% if (rep.comments[rep.id][b.id].quote === true) { %>
+                            <blockquote>
+                              "<%= rep.comments[rep.id][b.id].comment %>"
+                            </blockquote>
+                          <% } else { %>
+                            <div>
+                              <%= rep.comments[rep.id][b.id].comment %>
+                            </div>
+                          <% } %>
+                          <% if (rep.comments[rep.id][b.id].link !== undefined && 
+                            rep.comments[rep.id][b.id].link !== '') { %>
+                            <a href="<%= rep.comments[rep.id][b.id].link %>">Related article</a>
+                          <% } %>
+                        </div>
+                        <a href="#" class="show-comment">Show comment</a>
                       <% } %>
                     </div>
                   </td>
@@ -289,6 +322,8 @@
             };
             
             KeyvotesApp.prototype.processReps = function() {
+              var thisApp = this;
+            
               _.map(this.reps, function(rep, key) {
                 var totalBills;
                 var loyaltyVote = 0;
@@ -301,6 +336,9 @@
                 rep.bills = _.filter(this.bills, function(bill) {
                   return (bill[rep.id] !== undefined && bill[rep.id] !== '');
                 });
+                
+                // Add comment data
+                rep.comments = this.comments;
                 
                 // Determine loyalty;
                 rep.loyalty = rep.overallLoyalty;
@@ -539,6 +577,17 @@
                     repData.bills[i].perRN * 150, 15)
                     .attr('fill', thisApp.partyColors['R']).attr('stroke-width', 0);
                 }
+                
+                // Make quotes openable
+                $('.show-comment').click(function(e) {
+                  e.preventDefault();
+                  
+                  $(this).parent().find('.bill-rep-comment').hide().css({ 
+                    height: 'auto',
+                    overflow: 'auto'
+                  }).fadeIn().slideDown();
+                  $(this).hide();
+                })
               });
             };
             
