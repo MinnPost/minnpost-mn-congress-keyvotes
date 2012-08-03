@@ -99,6 +99,7 @@
       }
       .rep-bills table thead th {
         text-align: center;
+        vertical-align: bottom;
       }
       .rep-bills table thead th,
       .rep-bills table tbody tr td {
@@ -115,6 +116,14 @@
       }
       .rep-bills .bill-title {
         margin-bottom: 1em;
+        font-weight: bold;
+      }
+      .rep-bills .bill-date {
+        color: #BABABA;
+        margin-left: .5em;
+      }
+      .rep-bills .bill-overall-vote {
+        width: 37%;
       }
       .rep-bills .bill-overall-yes {
         margin-bottom: 1em;
@@ -130,6 +139,9 @@
       .rep-bills .bill-overall-label span {
         font-weight: bold;
         margin: 0;
+      }
+      .rep-bills .bill-rep-vote-col {
+        width: 14%;
       }
       .rep-bills .bill-overall .bill-yes,
       .rep-bills .bill-overall .bill-no {
@@ -170,7 +182,7 @@
       <div id="rep-graph-canvas"></div>
       <div id="rep-container"></div>
       
-      <p class="footnote">Data from <a href="http://projects.washingtonpost.com/congress/112/" target="_blank">Washington Post U.S. Congress Votes Database</a>.  Images provided by <a href="http://www.wikipedia.org/" target="_blank">Wikipedia</a>, <a href="http://www.senate.gov/" target="_blank">Senate.gov</a>, and <a href="http://house.gov/" target="_blank">House.gov</a>.  * Key bills are defined by the Washington Post U.S. Congress Votes Database.</p>
+      <p class="footnote">Data from <a href="http://projects.washingtonpost.com/congress/112/" target="_blank">Washington Post U.S. Congress Votes Database</a>.  Images provided by <a href="http://www.wikipedia.org/" target="_blank">Wikipedia</a>, <a href="http://www.senate.gov/" target="_blank">Senate.gov</a>, and <a href="http://house.gov/" target="_blank">House.gov</a>.  Comments and quotes are taken from MinnPost stories or official statements of their respective lawmakers' offices.  * Key bills are defined by the Washington Post U.S. Congress Votes Database.</p>
     </div>
     
     <!-- Templates to be used in client side processing. -->
@@ -217,9 +229,11 @@
                 <tr>
                   <td>
                     <div class="bill-title"><%= b['Bill'] %></div>
-                    <div class="bill-id"></div>
+                    <div class="bill-id">
+                      <%= b['billID'] %> <span class="bill-date"><%= b['date'] %></span>
+                    </div>
                   </td>
-                  <td>
+                  <td class="bill-overall-vote">
                     <div class="bill-overall bill-overall-yes">
                       <span class="bill-overall-label">
                         <span>YES</span>&nbsp;(<%= b['D Ayes'] + b['R Ayes'] %>)
@@ -235,7 +249,9 @@
                       <span><%= b['D Nays'] %>-<%= b['R Nays'] %></span>
                     </div>
                   </td>
-                  <td class="<% if (b[rep.id].indexOf('*') > 0) { %>against-party<% } else { %>with-party<% } %>">
+                  <td class="bill-rep-vote-col 
+                    <% if (b[rep.id].indexOf('*') > 0) { %>against-party<% } else { %>with-party<% } %>
+                  ">
                     <div class="bill-rep-vote">
                       <% if (b[rep.id] === 'Aye' || b[rep.id] === 'Aye*') { %>
                         Yes
