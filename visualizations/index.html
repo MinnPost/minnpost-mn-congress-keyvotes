@@ -182,7 +182,7 @@
       <div id="rep-graph-canvas"></div>
       <div id="rep-container"></div>
       
-      <p class="footnote">Data from <a href="http://projects.washingtonpost.com/congress/112/" target="_blank">Washington Post U.S. Congress Votes Database</a>.  Images provided by <a href="http://www.wikipedia.org/" target="_blank">Wikipedia</a>, <a href="http://www.senate.gov/" target="_blank">Senate.gov</a>, and <a href="http://house.gov/" target="_blank">House.gov</a>.  Comments and quotes are taken from MinnPost stories or official statements of their respective lawmakers' offices.  * Key bills are defined by the Washington Post U.S. Congress Votes Database.</p>
+      <p class="footnote">Data from <a href="http://projects.washingtonpost.com/congress/112/" target="_blank">Washington Post U.S. Congress Votes Database</a>.  Images provided by <a href="http://www.wikipedia.org/" target="_blank">Wikipedia</a>, <a href="http://www.senate.gov/" target="_blank">Senate.gov</a>, and <a href="http://house.gov/" target="_blank">House.gov</a>.  Comments and quotes are taken from MinnPost stories or official statements of their respective lawmakers' offices.  * Key bills are defined by the Washington Post U.S. Congress Votes Database.  ** Bills that required two-thirds vote to pass.</p>
     </div>
     
     <!-- Templates to be used in client side processing. -->
@@ -201,7 +201,7 @@
                 <% if (rep.type === 'representative') { %>
                   <h4><%= rep.district %></h4>
                 <% } %>
-                <p>Voted with <% if (rep.party == 'D') { %>DFL<% } else { %>Republicans<% } %>
+                <p>Voted with <% if (rep.party == 'D') { %>Democrats<% } else { %>Republicans<% } %>
                   <% if (rep.overallLoyaltyEffective !== undefined) { %>
                     <%= (rep.overallLoyaltyEffective * 100).toFixed(1) %>%
                   <% } else { %>
@@ -264,7 +264,7 @@
                     <div class="bill-rep-vote-loyalty">
                       <% if (b[rep.id].indexOf('*') > 0) { %>
                         Against party
-                      <% } else { %>
+                      <% } else if (b[rep.id] != 'NV') { %>
                         With party
                       <% } %>
                     </div>
@@ -352,6 +352,9 @@
                 rep.bills = _.filter(this.bills, function(bill) {
                   return (bill[rep.id] !== undefined && bill[rep.id] !== '');
                 });
+                rep.bill = _.sortBy(rep.bills, function(bill, k) {
+                  return bill.id;
+                })
                 
                 // Add comment data
                 rep.comments = this.comments;

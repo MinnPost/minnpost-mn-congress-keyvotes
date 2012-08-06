@@ -5,7 +5,10 @@ comments_callback({
       'link': '',
       'quote': true
     },
-    '14': {},
+    '13': {
+        'comment': 'The Keystone XL Pipeline means good paying, American jobs. The Congressman understands that for America to become energy independent, we need to take an all-of-the-above approach that utilizes domestic sources already developed while also continuing to invest in clean energy technology.',
+        'quote': true
+    },
     '18': {
       'comment': 'There are just too many unanswered questions surrounding "Fast and Furious," and the American people deserve to know more. Therefore, I will support the vote to hold the Attorney General in contempt for failure to provide requested information.',
       'link': 'http://www.minnpost.com/political-agenda/2012/06/dem-congressmen-walz-and-peterson-join-republicans-holder-contempt-vote',
